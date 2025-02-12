@@ -18,7 +18,7 @@ web_content = requests.get('https://www.brightermonday.co.ke/jobs/it-telecoms', 
 if web_content.status_code == 200:
     soup = BeautifulSoup(web_content.text, 'lxml')
 
-    script_tag = soup.find_all('script')[15]
+    script_tag = soup.find_all('script')[16]
     html_data = f'''{script_tag}'''
 
     match = re.findall(r'__gtmDataLayer = (.*);', html_data)
@@ -27,14 +27,6 @@ if web_content.status_code == 200:
         data = json.loads(match[0])[0]
 
         job_listings = data.get('ecommerce', [])["items"]
-        for job in job_listings:
-            title = job.get('item_name', 'N/A')
-            company = job.get('affiliation', 'N/A')
-            location = job.get('location_id', 'N/A')
-            category = f"{job.get('item_category', 'N/A')} - {job.get('item_category2', 'N/A')}"
-            total_hires = job.get('quantity', 'N/A')
-            level = job.get('item_category4', 'N/A')
-            salary = job.get('item_variant', 'N/A')
 
         with open('brightermonday_jobs.csv', 'w', newline='', encoding='utf-8') as csvfile:
             fieldnames = ['title', 'company', 'location', 'category', 'total_hires', 'level', 'salary']
